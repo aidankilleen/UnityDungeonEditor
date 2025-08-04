@@ -6,6 +6,8 @@ using UnityEditor;
 public class DungeonDesignerWindow : EditorWindow
 {
 
+    private DungeonData dungeonData;
+
     [MenuItem("Tools/Dungeon Designer")]
     public static void ShowWindow() 
     { 
@@ -16,9 +18,15 @@ public class DungeonDesignerWindow : EditorWindow
     {
         GUILayout.Label("Dungeon Designer Tool", EditorStyles.boldLabel);
 
+        dungeonData = (DungeonData)EditorGUILayout.
+                            ObjectField("DungeonData", dungeonData, typeof(DungeonData), false) as DungeonData;
+
+
         if (GUILayout.Button("Press Me")) 
         {
             Debug.Log("Button pressed");
+
+            Debug.Log($"there are {dungeonData.cells.Count} cells in the dungeon");
         }
         
     }
