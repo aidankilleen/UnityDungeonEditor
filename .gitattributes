@@ -1,0 +1,24 @@
+# Treat Unity binary files as binary
+*.unity binary
+*.prefab binary
+*.asset binary
+*.mat binary
+*.fbx binary
+*.png binary
+*.jpg binary
+*.anim binary
+*.controller binary
+*.wav binary
+*.mp3 binary
+*.ttf binary
+*.otf binary
+
+# Prevent merge conflicts in serialized files
+*.asset merge=unityyamlmerge eol=lf
+*.prefab merge=unityyamlmerge eol=lf
+*.unity merge=unityyamlmerge eol=lf
+
+# Text files
+*.cs text diff
+*.shader text diff
+*.txt text
