@@ -12,5 +12,14 @@ public class DungeonDesignerWindow : EditorWindow
         GetWindow<DungeonDesignerWindow>("Dungeon Designer");
     }
 
+    private void OnGUI()
+    {
+        GUILayout.Label("Dungeon Designer Tool", EditorStyles.boldLabel);
 
+        if (GUILayout.Button("Press Me")) 
+        {
+            Debug.Log("Button pressed");
+        }
+        
+    }
 }
