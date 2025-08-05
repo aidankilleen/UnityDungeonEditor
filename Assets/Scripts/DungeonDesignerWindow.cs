@@ -66,12 +66,7 @@ public class DungeonDesignerWindow : EditorWindow
 
         if (GUILayout.Button("Clear Dungeon"))
         {
-            GameObject parent = GetOrCreateDungeonParent();
-            Undo.DestroyObjectImmediate(parent);
-
-            dungeonData.cells.Clear();
-
-            EditorUtility.SetDirty(this);
+            ClearDungeon();
         }
 
 
@@ -82,6 +77,10 @@ public class DungeonDesignerWindow : EditorWindow
         if (GUILayout.Button("Save Dungeon to JSON"))
         {
             SaveDungeonToJson();
+        }
+        if (GUILayout.Button("Load Dungeon"))
+        {
+            LoadDungeonFromJson();
         }
     }
     private float GetPrefabSize(GameObject prefab)
@@ -142,6 +141,15 @@ public class DungeonDesignerWindow : EditorWindow
         return parent;
     }
 
+    private void ClearDungeon()
+    {
+        GameObject parent = GetOrCreateDungeonParent();
+        Undo.DestroyObjectImmediate(parent);
+
+        dungeonData.cells.Clear();
+
+        EditorUtility.SetDirty(this);
+    }
     private void SaveDungeonToJson()
     {
         if (dungeonData == null)
@@ -169,5 +177,29 @@ public class DungeonDesignerWindow : EditorWindow
         string json = JsonUtility.ToJson(saveData, true);
         File.WriteAllText(SaveFilePath, json);
         Debug.Log($"Dungeon saved to {SaveFilePath}");
+    }
+
+    private void LoadDungeonFromJson()
+    {
+        if (!File.Exists(SaveFilePath))
+        {
+            Debug.LogWarning("No dungeon file found to load.");
+            return;
+        }
+
+        ClearDungeon();
+
+
+        string json = File.ReadAllText(SaveFilePath);
+        DungeonSaveData saveData = JsonUtility.FromJson<DungeonSaveData>(json);
+
+        foreach (var cellSave in saveData.cells)
+        {
+            string prefabPath = AssetDatabase.GUIDToAssetPath(cellSave.prefabGuid);
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+            AddCellAtCoordinate(cellSave.x, cellSave.z, prefab);
+        }
+
+
     }
 }
