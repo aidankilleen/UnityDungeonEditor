@@ -62,6 +62,17 @@ public class DungeonDesignerWindow : EditorWindow
 
 
         }
+
+        if (GUILayout.Button("Clear Dungeon"))
+        {
+            GameObject parent = GetOrCreateDungeonParent();
+            Undo.DestroyObjectImmediate(parent);
+
+            dungeonData.cells.Clear();
+
+            EditorUtility.SetDirty(this);
+
+        }
         
     }
     private float GetPrefabSize(GameObject prefab)
