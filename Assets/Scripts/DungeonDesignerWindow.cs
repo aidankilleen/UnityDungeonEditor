@@ -87,10 +87,22 @@ public class DungeonDesignerWindow : EditorWindow
 
         Vector2Int gridPos = new Vector2Int(xCoord, zCoord);
 
+        // Check if cell already exists
+        if (!dungeonData.cells.Exists(c => c.gridPosition == gridPos))
+        {
+            // Add new cell to data
+            dungeonData.cells.Add(new DungeonCell
+            {
+                gridPosition = gridPos,
+                floorPrefab = floorPrefab
+            });
 
-        GameObject tile = (GameObject)PrefabUtility.InstantiatePrefab(floorPrefab);
-        tile.transform.position = new Vector3(gridPos.x * cellSize, 0, gridPos.y * cellSize);
-
+            GameObject tile = (GameObject)PrefabUtility.InstantiatePrefab(floorPrefab);
+            tile.transform.position = new Vector3(gridPos.x * cellSize, 0, gridPos.y * cellSize);
+        } else
+        {
+            Debug.Log($"Cell already at {gridPos.x}, {gridPos.y}");
+        }
 
     }
 }

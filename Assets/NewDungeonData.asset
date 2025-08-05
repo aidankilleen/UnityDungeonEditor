@@ -12,7 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 814d6d5c467e6aa4d8253f78b8403fee, type: 3}
   m_Name: NewDungeonData
   m_EditorClassIdentifier: 
-  cells:
-  - gridPosition: {x: 0, y: 0}
-    hasFloor: 0
-    floorPrefab: {fileID: 0}
+  cells: []
