@@ -4,15 +4,22 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
+
 public class DungeonDesignerWindow : EditorWindow
 {
 
     private DungeonData dungeonData;
     private GameObject floorPrefab;
+    private GameObject wallPrefab;
 
     private int xCoord;
     private int zCoord;
     private float cellSize = 1f;
+
+    private bool addNorthWall;
+    private bool addSouthWall;
+    private bool addEastWall;
+    private bool addWestWall;
 
     private const string dungeonParentName = "Dungeon";
     private string dungeonFileName = "dungeon";
@@ -40,12 +47,21 @@ public class DungeonDesignerWindow : EditorWindow
                 cellSize = GetPrefabSize(floorPrefab);
         }
 
+        wallPrefab = (GameObject)EditorGUILayout.ObjectField("Wall Prefab", wallPrefab, typeof(GameObject), false);
+
+
         cellSize = EditorGUILayout.FloatField("Cell Size", cellSize);
 
         GUILayout.Space(10);
         GUILayout.Label("Add Cell by Coordinates", EditorStyles.boldLabel);
         xCoord = EditorGUILayout.IntField("X Coordinate", xCoord);
         zCoord = EditorGUILayout.IntField("Z Coordinate", zCoord);
+
+        EditorGUILayout.LabelField("Walls for New Cell", EditorStyles.boldLabel);
+        addNorthWall = EditorGUILayout.Toggle("North Wall", addNorthWall);
+        addSouthWall = EditorGUILayout.Toggle("South Wall", addSouthWall);
+        addEastWall = EditorGUILayout.Toggle("East Wall", addEastWall);
+        addWestWall = EditorGUILayout.Toggle("West Wall", addWestWall);
 
         if (GUILayout.Button("Press Me")) 
         {
@@ -56,7 +72,7 @@ public class DungeonDesignerWindow : EditorWindow
 
         if (GUILayout.Button("Add Cell"))
         {
-            AddCellAtCoordinates();
+            AddCellAtCoordinates(xCoord,zCoord, addNorthWall, addSouthWall, addEastWall, addWestWall);
         }
 
         GUILayout.Space(10);
@@ -89,7 +105,7 @@ public class DungeonDesignerWindow : EditorWindow
 
 
     }
-    private void AddCellAtCoordinates()
+    private void AddCellAtCoordinates(int x, int z, bool north, bool south, bool east, bool west)
     {
         if (dungeonData == null || floorPrefab == null)
         {
@@ -97,7 +113,7 @@ public class DungeonDesignerWindow : EditorWindow
             return;
         }
 
-        Vector2Int gridPos = new Vector2Int(xCoord, zCoord);
+        Vector2Int gridPos = new Vector2Int(x, z);
 
         // Check if cell already exists
         if (!dungeonData.cells.Exists(c => c.gridPosition == gridPos))
@@ -106,7 +122,11 @@ public class DungeonDesignerWindow : EditorWindow
             dungeonData.cells.Add(new DungeonCell
             {
                 gridPosition = gridPos,
-                floorPrefab = floorPrefab
+                floorPrefab = floorPrefab, 
+                northWall = addNorthWall, 
+                southWall = addSouthWall,
+                eastWall = addEastWall,
+                westWall = addWestWall
             });
 
             // Instantiate the prefab in the scene
@@ -114,6 +134,30 @@ public class DungeonDesignerWindow : EditorWindow
             GameObject tile = (GameObject)PrefabUtility.InstantiatePrefab(floorPrefab);
             tile.transform.SetParent(parent.transform);
             tile.transform.position = new Vector3(gridPos.x * cellSize, 0, gridPos.y * cellSize);
+
+            // instantiate the walls
+            if (addNorthWall)
+            {
+                GameObject northWall = CreateWall(tile.transform.position, 0);
+                northWall.transform.SetParent(tile.transform);
+            }
+            if (addSouthWall)
+            {
+                GameObject southWall = CreateWall(tile.transform.position, 2);
+                southWall.transform.SetParent (tile.transform);
+            }
+            if (addEastWall)
+            {
+                GameObject southWall = CreateWall(tile.transform.position, 1);
+                southWall.transform.SetParent(tile.transform);
+            }
+            if (addWestWall)
+            {
+                GameObject southWall = CreateWall(tile.transform.position, 3);
+                southWall.transform.SetParent(tile.transform);
+            }
+
+
             Undo.RegisterCreatedObjectUndo(tile, "Add Cell");
 
             EditorUtility.SetDirty(dungeonData);
@@ -123,6 +167,27 @@ public class DungeonDesignerWindow : EditorWindow
         {
             Debug.LogWarning($"Cell at {gridPos} already exists!");
         }
+    }
+
+    private GameObject CreateWall(Vector3 position, int direction)
+    {
+        if (wallPrefab == null) return null;
+
+        //Vector3 position = Vector3.zero;
+        Quaternion rotation = Quaternion.identity;
+
+        switch (direction)
+        {
+            case 0: position = new Vector3(position.x, 0.5f, position.z + 5f ); rotation = Quaternion.Euler(0, 90, 0); break;  // North
+            case 1: position = new Vector3(position.x + 5f, 0.5f, position.z); rotation = Quaternion.identity; break; // East
+            case 2: position = new Vector3(position.x, 0.5f, position.z - 5f); rotation = Quaternion.Euler(0, 90, 0); break; // South
+            case 3: position = new Vector3(position.x - 5f, 0.5f, position.z); rotation = Quaternion.identity; break; // West
+        }
+
+        GameObject wall = PrefabUtility.InstantiatePrefab(wallPrefab) as GameObject;
+        wall.transform.position = position;
+        wall.transform.rotation = rotation;
+        return wall;
     }
     private float GetPrefabSize(GameObject prefab)
     {
@@ -197,7 +262,12 @@ public class DungeonDesignerWindow : EditorWindow
             {
                 x = cell.gridPosition.x,
                 z = cell.gridPosition.y,
-                prefabGuid = prefabGuid
+                prefabGuid = prefabGuid, 
+                northWall = cell.northWall,
+                southWall = cell.southWall,
+                eastWall = cell.eastWall,
+                westWall = cell.westWall   
+                
             });
         }
 
@@ -221,6 +291,8 @@ public class DungeonDesignerWindow : EditorWindow
 
         foreach (var cellSave in saveData.cells)
         {
+            
+            /*
             string prefabPath = AssetDatabase.GUIDToAssetPath(cellSave.prefabGuid);
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
 
@@ -241,11 +313,15 @@ public class DungeonDesignerWindow : EditorWindow
             tile.transform.SetParent(parent.transform);
             tile.transform.position = new Vector3(cellSave.x * cellSize, 0, cellSave.z * cellSize);
             Undo.RegisterCreatedObjectUndo(tile, "Load Cell");
+            */
         }
 
         EditorUtility.SetDirty(dungeonData);
         Debug.Log("Dungeon loaded from JSON.");
     }
+
+
+    
 
 
 }

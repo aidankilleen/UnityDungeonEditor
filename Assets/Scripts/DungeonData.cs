@@ -15,6 +15,10 @@ public class DungeonCell
     public Vector2Int gridPosition;
     public bool hasFloor;
     public GameObject floorPrefab;
+    public bool northWall;
+    public bool southWall;
+    public bool eastWall;
+    public bool westWall;
 }
 
 [Serializable]
@@ -23,6 +27,10 @@ public class DungeonCellSave
     public int x;
     public int z;
     public string prefabGuid; // instead of prefabName
+    public bool northWall;
+    public bool southWall;
+    public bool eastWall;
+    public bool westWall;
 }
 
 [Serializable]
