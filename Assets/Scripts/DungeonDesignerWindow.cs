@@ -28,6 +28,11 @@ public class DungeonDesignerWindow : EditorWindow
 
             Debug.Log($"there are {dungeonData.cells.Count} cells in the dungeon");
         }
+
+        if (GUILayout.Button("Add cell"))
+        {
+            Debug.Log("add cell pressed");
+        }
         
     }
 }
