@@ -58,9 +58,6 @@ public class DungeonDesignerWindow : EditorWindow
             Debug.Log("add cell pressed");
 
             AddCellAtCoordinate(xCoord, zCoord, floorPrefab);
-
-
-
         }
 
         if (GUILayout.Button("Clear Dungeon"))
@@ -71,9 +68,7 @@ public class DungeonDesignerWindow : EditorWindow
             dungeonData.cells.Clear();
 
             EditorUtility.SetDirty(this);
-
         }
-        
     }
     private float GetPrefabSize(GameObject prefab)
     {
