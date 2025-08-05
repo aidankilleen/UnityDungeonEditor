@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -17,6 +18,9 @@ public class DungeonDesignerWindow : EditorWindow
     private float cellSize = 1f;
 
     private const string dungeonParentName = "Dungeon";
+
+    private string dungeonFileName = "dungeon";
+    private string SaveFilePath => Path.Combine(Application.dataPath, dungeonFileName + ".json");
 
 
     [MenuItem("Tools/Dungeon Designer")]
@@ -68,6 +72,16 @@ public class DungeonDesignerWindow : EditorWindow
             dungeonData.cells.Clear();
 
             EditorUtility.SetDirty(this);
+        }
+
+
+        GUILayout.Space(10);
+        GUILayout.Label("Dungeon File", EditorStyles.boldLabel);
+        dungeonFileName = EditorGUILayout.TextField("Filename (no extension)", dungeonFileName);
+
+        if (GUILayout.Button("Save Dungeon to JSON"))
+        {
+            SaveDungeonToJson();
         }
     }
     private float GetPrefabSize(GameObject prefab)
@@ -126,5 +140,34 @@ public class DungeonDesignerWindow : EditorWindow
             Undo.RegisterCreatedObjectUndo(parent, "Create Dungeon Parent");
         }
         return parent;
+    }
+
+    private void SaveDungeonToJson()
+    {
+        if (dungeonData == null)
+        {
+            Debug.LogWarning("No DungeonData to save.");
+            return;
+        }
+
+        DungeonSaveData saveData = new DungeonSaveData();
+
+        foreach (var cell in dungeonData.cells)
+        {
+            string prefabPath = AssetDatabase.GetAssetPath(cell.floorPrefab);
+            string prefabGuid = AssetDatabase.AssetPathToGUID(prefabPath);
+
+            saveData.cells.Add(new DungeonCellSave
+            {
+                x = cell.gridPosition.x,
+                z = cell.gridPosition.y,
+                prefabGuid = prefabGuid,
+
+            });
+        }
+
+        string json = JsonUtility.ToJson(saveData, true);
+        File.WriteAllText(SaveFilePath, json);
+        Debug.Log($"Dungeon saved to {SaveFilePath}");
     }
 }
