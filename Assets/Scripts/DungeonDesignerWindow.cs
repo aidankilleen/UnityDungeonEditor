@@ -16,6 +16,9 @@ public class DungeonDesignerWindow : EditorWindow
     private GameObject floorPrefab;
     private float cellSize = 1f;
 
+    private const string dungeonParentName = "Dungeon";
+
+
     [MenuItem("Tools/Dungeon Designer")]
     public static void ShowWindow() 
     { 
@@ -97,12 +100,25 @@ public class DungeonDesignerWindow : EditorWindow
                 floorPrefab = floorPrefab
             });
 
+            GameObject parent = GetOrCreateDungeonParent();
             GameObject tile = (GameObject)PrefabUtility.InstantiatePrefab(floorPrefab);
+            tile.transform.SetParent(parent.transform);
             tile.transform.position = new Vector3(gridPos.x * cellSize, 0, gridPos.y * cellSize);
         } else
         {
             Debug.Log($"Cell already at {gridPos.x}, {gridPos.y}");
         }
 
+    }
+
+    private GameObject GetOrCreateDungeonParent()
+    {
+        GameObject parent = GameObject.Find(dungeonParentName);
+        if (parent == null)
+        {
+            parent = new GameObject(dungeonParentName);
+            Undo.RegisterCreatedObjectUndo(parent, "Create Dungeon Parent");
+        }
+        return parent;
     }
 }
