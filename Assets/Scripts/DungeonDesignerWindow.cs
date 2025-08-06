@@ -6,6 +6,14 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
+
+public enum WallDirections
+{
+    North = 1, 
+    South = 2,
+    East = 3,
+    West = 4
+}
 public class DungeonDesignerWindow : EditorWindow
 {
 
@@ -148,15 +156,31 @@ public class DungeonDesignerWindow : EditorWindow
             GameObject parent = GetOrCreateDungeonParent();
             GameObject tile = (GameObject)PrefabUtility.InstantiatePrefab(floorPrefab);
             tile.transform.SetParent(parent.transform);
+            tile.transform.position = new Vector3(gridPos.x * cellSize, 0, gridPos.y * cellSize);
 
             if (northWall)
             {
-                GameObject northWallGameObject = CreateWall(tile.transform.position, 0, wallPrefab);
+                GameObject northWallGameObject = CreateWall(tile.transform.position, WallDirections.North, wallPrefab);
                 northWallGameObject.transform.SetParent(tile.transform);
+            }
+            if (southWall)
+            {
+                GameObject southWallGameObject = CreateWall(tile.transform.position, WallDirections.South, wallPrefab);
+                southWallGameObject.transform.SetParent(tile.transform);
+            }
+            if (eastWall)
+            {
+                GameObject eastWallGameObject = CreateWall(tile.transform.position, WallDirections.East, wallPrefab);
+                eastWallGameObject.transform.SetParent(tile.transform);
+            }
+            if (westWall)
+            {
+                GameObject westWallGameObject = CreateWall(tile.transform.position, WallDirections.West, wallPrefab);
+                westWallGameObject.transform.SetParent(tile.transform);
             }
 
 
-            tile.transform.position = new Vector3(gridPos.x * cellSize, 0, gridPos.y * cellSize);
+
         } else
         {
             Debug.Log($"Cell already at {gridPos.x}, {gridPos.y}");
@@ -164,16 +188,37 @@ public class DungeonDesignerWindow : EditorWindow
 
     }
 
-    private GameObject CreateWall(Vector3 position, int direction, GameObject wallPrefab)
+    private GameObject CreateWall(Vector3 position, WallDirections direction, GameObject wallPrefab)
     {
         if (wallPrefab == null)
         {
             return null;
         }
 
+        GameObject wall = null;
 
-        GameObject wall = PrefabUtility.InstantiatePrefab(wallPrefab) as GameObject;
-        wall.transform.position = position;
+        if (direction == WallDirections.North)
+        {
+            wall = PrefabUtility.InstantiatePrefab(wallPrefab) as GameObject;
+            wall.transform.position = position + new Vector3(0, 0.5f, 5.0f);
+        }
+        if (direction == WallDirections.South)
+        {
+            wall = PrefabUtility.InstantiatePrefab(wallPrefab) as GameObject;
+            wall.transform.position = position + new Vector3(0, 0.5f, -5.0f);
+        }
+        if (direction == WallDirections.East)
+        {
+            wall = PrefabUtility.InstantiatePrefab(wallPrefab) as GameObject;
+            wall.transform.position = position + new Vector3(5.0f, 0.5f, 0f);
+            wall.transform.Rotate(0f, 90f, 0f);
+        }
+        if (direction == WallDirections.West)
+        {
+            wall = PrefabUtility.InstantiatePrefab(wallPrefab) as GameObject;
+            wall.transform.position = position + new Vector3(-5.0f, 0.5f, 0f);
+            wall.transform.Rotate(0f, 90f, 0f);
+        }
 
         return wall;
 
