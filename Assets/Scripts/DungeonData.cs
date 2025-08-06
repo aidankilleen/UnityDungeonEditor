@@ -15,6 +15,11 @@ public class DungeonCell
     public Vector2Int gridPosition;
     public bool hasFloor;
     public GameObject floorPrefab;
+    public GameObject wallPrefab;
+    public bool northWall;
+    public bool southWall;
+    public bool eastWall;
+    public bool westWall;
 }
 
 [Serializable]
