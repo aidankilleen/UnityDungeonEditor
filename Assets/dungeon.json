@@ -22,16 +22,6 @@
         },
         {
             "x": 1,
-            "z": 1,
-            "floorPrefabGuid": "3f3759aa513dae9498996046c2861a3e",
-            "wallPrefabGuid": "a629fe3ac75c08544a4f5cb4521a4887",
-            "northWall": true,
-            "southWall": true,
-            "eastWall": false,
-            "westWall": false
-        },
-        {
-            "x": 1,
             "z": 2,
             "floorPrefabGuid": "3f3759aa513dae9498996046c2861a3e",
             "wallPrefabGuid": "a629fe3ac75c08544a4f5cb4521a4887",
@@ -59,6 +49,26 @@
             "southWall": false,
             "eastWall": true,
             "westWall": true
+        },
+        {
+            "x": 1,
+            "z": 1,
+            "floorPrefabGuid": "3f3759aa513dae9498996046c2861a3e",
+            "wallPrefabGuid": "a629fe3ac75c08544a4f5cb4521a4887",
+            "northWall": false,
+            "southWall": false,
+            "eastWall": false,
+            "westWall": false
+        },
+        {
+            "x": 1,
+            "z": 0,
+            "floorPrefabGuid": "3f3759aa513dae9498996046c2861a3e",
+            "wallPrefabGuid": "a629fe3ac75c08544a4f5cb4521a4887",
+            "northWall": false,
+            "southWall": true,
+            "eastWall": true,
+            "westWall": false
         }
     ]
 }
