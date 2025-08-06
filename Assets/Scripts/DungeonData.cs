@@ -20,6 +20,7 @@ public class DungeonCell
     public bool southWall;
     public bool eastWall;
     public bool westWall;
+    public GameObject floorGameObject;
 }
 
 [Serializable]
@@ -33,6 +34,7 @@ public class DungeonCellSave
     public bool southWall;
     public bool eastWall;
     public bool westWall;
+
 }
 
 [Serializable]

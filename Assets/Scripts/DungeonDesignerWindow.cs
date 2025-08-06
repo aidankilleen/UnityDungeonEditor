@@ -90,6 +90,13 @@ public class DungeonDesignerWindow : EditorWindow
 
             AddCellAtCoordinate(xCoord, zCoord, floorPrefab, wallPrefab, northWall, southWall, eastWall, westWall);
         }
+        if (GUILayout.Button("Delete cell"))
+        {
+            Debug.Log("delete cell pressed");
+
+            //AddCellAtCoordinate(xCoord, zCoord, floorPrefab, wallPrefab, northWall, southWall, eastWall, westWall);
+            DeleteCellAtCoordinate(xCoord, zCoord);
+        }
 
         if (GUILayout.Button("Clear Dungeon"))
         {
@@ -126,6 +133,19 @@ public class DungeonDesignerWindow : EditorWindow
         return 1f;
     }
 
+    public void DeleteCellAtCoordinate(int xCoord, int zCoord)
+    {
+        Vector2Int gridPos = new Vector2Int(xCoord, zCoord);
+
+        DungeonCell cell = dungeonData.cells.Find(c => c.gridPosition == gridPos);
+
+        if (cell != null) {
+            Debug.Log($"{cell.gridPosition}");
+            DestroyImmediate(cell.floorGameObject, true);
+
+            dungeonData.cells.Remove(cell);
+        }
+    }
     public void AddCellAtCoordinate(int xCoord, int zCoord, 
                 GameObject floorPrefab, GameObject wallPrefab, 
                 bool northWall, bool southWall, bool eastWall, bool westWall)
@@ -141,17 +161,7 @@ public class DungeonDesignerWindow : EditorWindow
         // Check if cell already exists
         if (!dungeonData.cells.Exists(c => c.gridPosition == gridPos))
         {
-            // Add new cell to data
-            dungeonData.cells.Add(new DungeonCell
-            {
-                gridPosition = gridPos,
-                floorPrefab = floorPrefab, 
-                wallPrefab = wallPrefab,
-                northWall = northWall, 
-                southWall = southWall,
-                eastWall = eastWall,
-                westWall = westWall,
-            });
+            
 
             GameObject parent = GetOrCreateDungeonParent();
             GameObject tile = (GameObject)PrefabUtility.InstantiatePrefab(floorPrefab);
@@ -178,6 +188,21 @@ public class DungeonDesignerWindow : EditorWindow
                 GameObject westWallGameObject = CreateWall(tile.transform.position, WallDirections.West, wallPrefab);
                 westWallGameObject.transform.SetParent(tile.transform);
             }
+
+            // Add new cell to data
+            dungeonData.cells.Add(new DungeonCell
+            {
+                gridPosition = gridPos,
+                floorPrefab = floorPrefab,
+                wallPrefab = wallPrefab,
+                northWall = northWall,
+                southWall = southWall,
+                eastWall = eastWall,
+                westWall = westWall,
+                floorGameObject = tile.gameObject 
+            });
+
+
         } else
         {
             Debug.Log($"Cell already at {gridPos.x}, {gridPos.y}");
