@@ -27,7 +27,12 @@ public class DungeonCellSave
 {
     public int x;
     public int z;
-    public string prefabGuid; // instead of prefabName
+    public string floorPrefabGuid; // instead of prefabName
+    public string wallPrefabGuid;
+    public bool northWall;
+    public bool southWall;
+    public bool eastWall;
+    public bool westWall;
 }
 
 [Serializable]

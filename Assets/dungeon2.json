@@ -3,87 +3,32 @@
         {
             "x": 0,
             "z": 0,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 1,
-            "z": 0,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 0,
-            "z": 1,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
+            "floorPrefabGuid": "3f3759aa513dae9498996046c2861a3e",
+            "wallPrefabGuid": "a629fe3ac75c08544a4f5cb4521a4887",
+            "northWall": false,
+            "southWall": true,
+            "eastWall": true,
+            "westWall": true
         },
         {
             "x": 0,
-            "z": -1,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 2,
-            "z": 0,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 3,
-            "z": 0,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 3,
-            "z": 3,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 2,
-            "z": 3,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 1,
-            "z": 3,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 1,
-            "z": 2,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 1,
             "z": 1,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
+            "floorPrefabGuid": "3f3759aa513dae9498996046c2861a3e",
+            "wallPrefabGuid": "a629fe3ac75c08544a4f5cb4521a4887",
+            "northWall": false,
+            "southWall": false,
+            "eastWall": true,
+            "westWall": true
         },
         {
-            "x": 4,
-            "z": 0,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 2,
-            "z": 1,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 2,
+            "x": 0,
             "z": 2,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 4,
-            "z": 3,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 4,
-            "z": 2,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
-        },
-        {
-            "x": 4,
-            "z": 1,
-            "prefabGuid": "3f3759aa513dae9498996046c2861a3e"
+            "floorPrefabGuid": "3f3759aa513dae9498996046c2861a3e",
+            "wallPrefabGuid": "a629fe3ac75c08544a4f5cb4521a4887",
+            "northWall": true,
+            "southWall": false,
+            "eastWall": true,
+            "westWall": true
         }
     ]
 }

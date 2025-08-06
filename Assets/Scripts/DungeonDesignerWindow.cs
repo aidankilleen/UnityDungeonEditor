@@ -178,9 +178,6 @@ public class DungeonDesignerWindow : EditorWindow
                 GameObject westWallGameObject = CreateWall(tile.transform.position, WallDirections.West, wallPrefab);
                 westWallGameObject.transform.SetParent(tile.transform);
             }
-
-
-
         } else
         {
             Debug.Log($"Cell already at {gridPos.x}, {gridPos.y}");
@@ -256,15 +253,21 @@ public class DungeonDesignerWindow : EditorWindow
 
         foreach (var cell in dungeonData.cells)
         {
-            string prefabPath = AssetDatabase.GetAssetPath(cell.floorPrefab);
-            string prefabGuid = AssetDatabase.AssetPathToGUID(prefabPath);
+            string floorPrefabPath = AssetDatabase.GetAssetPath(cell.floorPrefab);
+            string floorPrefabGuid = AssetDatabase.AssetPathToGUID(floorPrefabPath);
+            string wallPrefabPath = AssetDatabase.GetAssetPath(cell.wallPrefab);
+            string wallPrefabGuid = AssetDatabase.AssetPathToGUID(wallPrefabPath);
 
             saveData.cells.Add(new DungeonCellSave
             {
                 x = cell.gridPosition.x,
                 z = cell.gridPosition.y,
-                prefabGuid = prefabGuid,
-
+                floorPrefabGuid = floorPrefabGuid,
+                wallPrefabGuid = wallPrefabGuid,
+                northWall = cell.northWall,
+                southWall = cell.southWall,
+                eastWall = cell.eastWall,
+                westWall = cell.westWall
             });
         }
 
@@ -287,12 +290,16 @@ public class DungeonDesignerWindow : EditorWindow
         string json = File.ReadAllText(SaveFilePath);
         DungeonSaveData saveData = JsonUtility.FromJson<DungeonSaveData>(json);
 
-        foreach (var cellSave in saveData.cells)
+        foreach (var cell in saveData.cells)
         {
-            string prefabPath = AssetDatabase.GUIDToAssetPath(cellSave.prefabGuid);
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
-            //TBD fix this
-            //AddCellAtCoordinate(cellSave.x, cellSave.z, prefab);
+            string floorPrefabPath = AssetDatabase.GUIDToAssetPath(cell.floorPrefabGuid);
+            GameObject floorPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(floorPrefabPath);
+            string wallPrefabPath = AssetDatabase.GUIDToAssetPath(cell.wallPrefabGuid);
+            GameObject wallPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(wallPrefabPath);
+
+            AddCellAtCoordinate(cell.x, cell.z, 
+                                floorPrefab, wallPrefab, 
+                                cell.northWall, cell.southWall, cell.eastWall, cell.westWall);
         }
 
 
